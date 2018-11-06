@@ -22,6 +22,9 @@ class Renderer {
   }
 
   drawBg () {
+    this.ctx.fillStyle = '#eee';
+    this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
     for(let y = 0; y < BOARD_HEIGHT; y++) {
       for(let x = 0; x < BOARD_WIDTH; x++) {
         this.spr(4, 0, x * SPRITE_SIZE, y * SPRITE_SIZE)

@@ -96,8 +96,6 @@ const board = new Board(minos);
 document.getElementById('testButton')
   .addEventListener('click', board.clearLines.bind(board))
 
-ctx.fillStyle = 'grey';
-ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
 const spriteMap = {
   0: [4, 0],
@@ -117,15 +115,14 @@ function update() {
   })
 }
 
+const state = { board }
 
-const sheet = new SpriteSheet('sprites.png', SPRITE_SIZE, () => {
+const sprites = new SpriteSheet('sprites.png', SPRITE_SIZE, () => {
 
   const renderer = new Renderer({
-    sprites: sheet,
     canvasId: 'canvas',
-    state: {
-      board
-    }
+    sprites,
+    state
   });
 
   const game = new Game(state, update, renderer.render.bind(renderer));
