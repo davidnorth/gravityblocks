@@ -11,24 +11,11 @@ const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
 
-// Onscreen canvas
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-// Offscreen buffer - "native" resolution
-const bufferCanvas = document.createElement('canvas');
-bufferCanvas.width = BUFFER_WIDTH;
-bufferCanvas.height = BUFFER_HEIGHT;
-const bufferCtx = bufferCanvas.getContext('2d');
-
-
-
-
-
-
+// mino type identifiers
 const I_TRIMINO = 1
 const J_TRIMINO = 2
 const L_TRIMINO = 3
+
 
 const minos = [
 
@@ -101,10 +88,6 @@ const minos = [
     new Block(6, 2, L_TRIMINO),
     new Block(7, 1, L_TRIMINO)
   ]),
-
-
-
-
 ]
 
 const board = new Board(minos);
@@ -113,57 +96,43 @@ const board = new Board(minos);
 document.getElementById('testButton')
   .addEventListener('click', board.clearLines.bind(board))
 
-
 ctx.fillStyle = 'grey';
 ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-  const spriteMap = {
-    0: [4, 0],
-  }
-  spriteMap[I_TRIMINO] = [1, 0]
-  spriteMap[J_TRIMINO] = [1, 1]
-  spriteMap[L_TRIMINO] = [1, 2]
+const spriteMap = {
+  0: [4, 0],
+}
+spriteMap[I_TRIMINO] = [1, 0]
+spriteMap[J_TRIMINO] = [1, 1]
+spriteMap[L_TRIMINO] = [1, 2]
 
-
-const state = {}
 
 
 function update() {
-
   board.minos.forEach((mino) => {
     if(board.canFall(mino)) {
         mino.moveDown()
         board.updateCells()
     }
   })
-
-
 }
 
 
-function renderSprite(sheet, spriteX, spriteY, x, y) {
-  let spriteImage = sheet.getSpriteImageData(spriteX, spriteY);
-  ctx.putImageData(spriteImage, x, y);
-}
+const sheet = new SpriteSheet('sprites.png', SPRITE_SIZE, () => {
 
-function render() {
-
-  for(let y = 0; y < BOARD_HEIGHT; y++) {
-    for(let x = 0; x < BOARD_WIDTH; x++) {
-      renderSprite(sheet, 4, 0, x * SPRITE_SIZE, y * SPRITE_SIZE)
+  const renderer = new Renderer({
+    sprites: sheet,
+    canvasId: 'canvas',
+    state: {
+      board
     }
-  }
-
-  board.minos.forEach((mino) => {
-    mino.blocks.forEach((block) => {
-      renderSprite(sheet,
-                   spriteMap[block.col][0], spriteMap[block.col][1],
-                   block.x * SPRITE_SIZE, block.y * SPRITE_SIZE);
-    });
   });
 
-}
+  const game = new Game(state, update, renderer.render.bind(renderer));
 
-const game = new Game(state, update, render);
-const sheet = new SpriteSheet('sprites.png', SPRITE_SIZE, game.start.bind(game));
+  game.start();
+
+})
+
+
 
