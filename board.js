@@ -1,3 +1,8 @@
+function arrayUniq(array) {
+  return array.reduce((ar, item) => ar.includes(item) ? ar : ar.concat(item), [])
+}
+
+
 function arrayRemove(array, value) {
   if(!array.includes(value)) return;
   array.splice(array.indexOf(value), 1);
@@ -39,18 +44,38 @@ class Board {
   clearLines () {
     const rows = this.filledRows();
     rows.forEach((row) => {
-      row.forEach((block) => {
-        this.deleteBlock(block);
+
+      // unique minos in this row
+      const minos = arrayUniq(row.map((block) => this.minos.find((mino) => mino.blocks.includes(block))))
+
+
+
+
+      const newMinos = minos.flatMap((mino) =>  {
+        return mino.split(row)
       })
+
+
+      // remove the old minos
+      minos.forEach((mino) => arrayRemove(this.minos, mino));
+      // replace with new ones
+      this.minos = this.minos.concat(newMinos)
+
+
+      console.log("split minos");
+      console.log(newMinos);
+
+
+
     })
     this.updateCells()
   }
 
-  deleteBlock (block) {
-    this.minos.forEach((mino) => {
-      arrayRemove(mino.blocks, block)
-    })
-  }
+  // deleteBlock (block) {
+  //   this.minos.forEach((mino) => {
+  //     arrayRemove(mino.blocks, block)
+  //   })
+  // }
 
   filledRows () {
     return this.grid.filter((row) => this.isRowFilled(row))
