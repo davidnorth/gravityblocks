@@ -61,7 +61,8 @@ class Board {
 
   updateSettling () {
     this.updateBlockEntities()
-    if(this.stateFrame > 45) {
+
+    if(this.blocks.every((b) => b.entity.y === b.y)) {
       this.startLineClearing()
     }
   }
