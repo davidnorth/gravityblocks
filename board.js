@@ -28,6 +28,7 @@ class Board {
   }
 
   setState(state) {
+    console.log("state: " + this.state + '->' + state);
     this.state = state
     this.stateFrame = 0
   }
@@ -60,14 +61,15 @@ class Board {
   updateSettling () {
     this.updateBlockEntities()
     if(this.stateFrame > 45) {
-      // Start clearing animation
-      this.setState(BOARD_STATE_CLEARING)
-      this.clearLines();
+      this.startLineClearing()
     }
   }
 
   updateClearing () {
-    if(this.stateFrame > 5) {
+    if(this.stateFrame > 60) {
+      // removes the filled rows
+      this.clearLines();
+      // move blocks down and start the falling animation
       this.drop();
     }
   }
@@ -104,11 +106,22 @@ class Board {
     return this.grid[y][x]
   }
 
-  clearLines () {
-    // (array of arrays of blocks)
-    const rows = this.filledRows();
+  startLineClearing () {
+    // store this.rowsToClear - array of row indeces
+    this.rowsToClear = this.filledRows();
+    if(this.rowsToClear.length) {
+      // starts the clearing animation, at the end of which the rows will be removed
+      this.setState(BOARD_STATE_CLEARING)
+    }
+    else {
+      // no rows to clear
+      this.setState(BOARD_STATE_INTERACTIVE)
+    }
+  }
 
-    const blocks = rows.flatMap((r) => r); // Array flatten?
+  clearLines () {
+    // All blocks that are on one of the rows to be cleared
+    const blocks = this.blocks.filter((b) => this.rowsToClear.includes(b.y))
 
     // unique minos intersecting these blocks
     const minos = arrayUniq(blocks.map((block) => this.minos.find((mino) => mino.blocks.includes(block))))
@@ -124,16 +137,17 @@ class Board {
 
     // Rebuilt the grid of blocks
     this.updateCells()
+
+    this.rowsToClear = []
   }
 
-  // !! consider just returning indecies of the rows
-  // (or new Row entity)
   filledRows () {
-    return this.grid.filter((row) => this.isRowFilled(row))
+    const rowIndices = Array.from(this.grid.keys())
+    return rowIndices.filter((i) => this.isRowFilled(i))
   }
 
   isRowFilled (row) {
-    return row.every((cell) => cell)
+    return this.grid[row].every((b) => b)
   }
 
 }
