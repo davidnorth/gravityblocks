@@ -32,8 +32,7 @@ class Renderer {
     }
   }
 
-  drawMinos () {
-    this.state.board.minos.forEach((mino) => {
+  drawMino (mino) {
       mino.blocks.forEach((block) => {
         let sX, sY
         if(this.state.board.rowsToClear.includes(block.y) && (this.state.board.stateFrame) % 2 === 0) {
@@ -44,14 +43,17 @@ class Renderer {
           sX = spriteMap[block.col][0]
           sY = spriteMap[block.col][1]
         }
-
-
-
         this.spr(
                      sX ,sY,
                      block.entity.x * SPRITE_SIZE, block.entity.y * SPRITE_SIZE);
       });
-    });
+  }
+
+  drawMinos () {
+    this.state.board.minos.forEach(this.drawMino.bind(this));
+    if(this.state.board.newMino) {
+      this.drawMino(this.state.board.newMino)
+    }
   }
 
 }

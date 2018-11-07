@@ -9,6 +9,8 @@ function arrayRemove(array, value) {
 }
 
 
+// countdown to start of gameplay
+const BOARD_STATE_COUNTDOWN = 'Countdown'
 // player controlling falling mino
 const BOARD_STATE_INTERACTIVE = 'Interactive'
 // line clear animation
@@ -24,8 +26,27 @@ class Board {
     this.grid = []
     this.blocks = []
     this.updateCells()
-    this.setState(BOARD_STATE_INTERACTIVE)
     this.rowsToClear = []
+    this.queue = []
+    this.initQueue()
+    this.newMino = null
+    this.setState(BOARD_STATE_COUNTDOWN)
+  }
+
+  initQueue() {
+    this.queue.push(Mino.getRandom())
+    this.queue.push(Mino.getRandom())
+  }
+
+  // Remove and return a mino from the queue
+    // Add another to the bottom
+  popMino() {
+    this.queue.unshift(Mino.getRandom())
+    return this.queue.pop()
+  }
+
+  nextMino() {
+    return this.queue[this.queue.length-1]
   }
 
   setState(state) {
@@ -76,8 +97,6 @@ class Board {
     }
   }
 
-  updateInteractive () {
-  }
 
   updateBlockEntities () {
     this.blocks.forEach((block) => block.entity.update())
@@ -108,6 +127,26 @@ class Board {
     return this.grid[y][x]
   }
 
+
+  startInteractive () {
+    console.log("startInteractive");
+    this.newMino = this.popMino();
+    this.setState(BOARD_STATE_INTERACTIVE)
+    console.log(this.newMino);
+  }
+
+  updateCountdown () {
+  }
+
+  updateInteractive () {
+    if(this.stateFrame % 10 === 0) {
+      console.log("move mino");
+      this.newMino.moveDown(true)
+    }
+  }
+
+
+
   startLineClearing () {
     // store this.rowsToClear - array of row indeces
     this.rowsToClear = this.filledRows();
@@ -117,7 +156,7 @@ class Board {
     }
     else {
       // no rows to clear
-      this.setState(BOARD_STATE_INTERACTIVE)
+      this.startInteractive()
     }
   }
 

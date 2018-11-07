@@ -5,9 +5,20 @@ class Mino {
     this.landed = false;
   }
 
-  moveDown () {
+  static getRandom () {
+    return new Mino([
+      new Block(4, 0, L_TRIMINO),
+      new Block(4, 1, L_TRIMINO),
+      new Block(5, 0, L_TRIMINO)
+    ])
+  }
+
+  moveDown (instant) {
     this.blocks.forEach((block) => {
       block.moveDown();
+      if(instant) {
+        block.entity.y = block.y;
+      }
     });
   }
 
