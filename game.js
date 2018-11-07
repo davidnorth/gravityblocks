@@ -14,9 +14,7 @@ class Game {
   frame () {
     this.updateFn()
     this.renderFn()
-    setTimeout(() => {
-      requestAnimationFrame(this.frame.bind(this));
-    }, 200)
+    requestAnimationFrame(this.frame.bind(this));
   }
 
 }

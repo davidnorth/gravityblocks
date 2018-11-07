@@ -37,7 +37,7 @@ class Renderer {
       mino.blocks.forEach((block) => {
         this.spr(
                      spriteMap[block.col][0], spriteMap[block.col][1],
-                     block.x * SPRITE_SIZE, block.y * SPRITE_SIZE);
+                     block.entity.x * SPRITE_SIZE, block.entity.y * SPRITE_SIZE);
       });
     });
   }

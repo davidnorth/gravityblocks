@@ -2,20 +2,52 @@ function arrayUniq(array) {
   return array.reduce((ar, item) => ar.includes(item) ? ar : ar.concat(item), [])
 }
 
-
 function arrayRemove(array, value) {
   if(!array.includes(value)) return;
   array.splice(array.indexOf(value), 1);
   return array;
 }
 
+
+const BOARD_STATE_INTERACTIVE = 'Interactive'
+const BOARD_STATE_CLEARING = 'Clearing'
+const BOARD_STATE_SETTLING = 'Settling'
+
+
 class Board {
 
   constructor (minos) {
     this.minos = minos;
     this.grid = []
+    this.blocks = []
     this.updateCells()
+    this.setState(BOARD_STATE_SETTLING)
   }
+
+  setState(state) {
+    this.state = state
+    this.stateFrame = 0
+  }
+
+  update () {
+    this.stateFrame ++;
+    this["update" + this.state]()
+  }
+
+  updateSettling () {
+    this.updateBlockEntities()
+  }
+
+  updateClearing () {
+  }
+
+  updateInteractive () {
+  }
+
+  updateBlockEntities () {
+    this.blocks.forEach((block) => block.entity.update())
+  }
+
 
   updateCells () {
     this.blocks = this.minos.flatMap((mino) => mino.blocks)

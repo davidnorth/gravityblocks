@@ -107,12 +107,15 @@ spriteMap[L_TRIMINO] = [1, 2]
 
 
 function update() {
-  board.minos.forEach((mino) => {
-    if(board.canFall(mino)) {
-        mino.moveDown()
-        board.updateCells()
-    }
-  })
+  board.update()
+
+  // board.minos.forEach((mino) => {
+  //   if(board.canFall(mino)) {
+  //       mino.moveDown()
+  //       board.updateCells()
+  //   }
+  // })
+
 }
 
 const state = { board }
