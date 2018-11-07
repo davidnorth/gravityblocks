@@ -25,6 +25,7 @@ class Board {
     this.blocks = []
     this.updateCells()
     this.setState(BOARD_STATE_INTERACTIVE)
+    this.rowsToClear = []
   }
 
   setState(state) {
@@ -66,7 +67,7 @@ class Board {
   }
 
   updateClearing () {
-    if(this.stateFrame > 60) {
+    if(this.stateFrame > 10) {
       // removes the filled rows
       this.clearLines();
       // move blocks down and start the falling animation

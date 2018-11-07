@@ -35,8 +35,20 @@ class Renderer {
   drawMinos () {
     this.state.board.minos.forEach((mino) => {
       mino.blocks.forEach((block) => {
+        let sX, sY
+        if(this.state.board.rowsToClear.includes(block.y) && (this.state.board.stateFrame) % 2 === 0) {
+          console.log("block in row to clear");
+          sX = 2
+          sY = 0
+        } else {
+          sX = spriteMap[block.col][0]
+          sY = spriteMap[block.col][1]
+        }
+
+
+
         this.spr(
-                     spriteMap[block.col][0], spriteMap[block.col][1],
+                     sX ,sY,
                      block.entity.x * SPRITE_SIZE, block.entity.y * SPRITE_SIZE);
       });
     });
