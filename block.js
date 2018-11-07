@@ -32,7 +32,7 @@ class BlockEntity {
   update () {
     if(this.y < this.ty) {
       this.vy += this.g;
-      this.y += this.vy
+      this.y = Math.min(this.ty, this.y + this.vy)
     } else {
       this.y = this.ty;
       this.vy = 0;

@@ -59,9 +59,17 @@ class Board {
 
   updateSettling () {
     this.updateBlockEntities()
+    if(this.stateFrame > 45) {
+      // Start clearing animation
+      this.setState(BOARD_STATE_CLEARING)
+      this.clearLines();
+    }
   }
 
   updateClearing () {
+    if(this.stateFrame > 5) {
+      this.drop();
+    }
   }
 
   updateInteractive () {
@@ -97,24 +105,29 @@ class Board {
   }
 
   clearLines () {
+    // (array of arrays of blocks)
     const rows = this.filledRows();
-    rows.forEach((row) => {
-      // unique minos in this row
-      const minos = arrayUniq(row.map((block) => this.minos.find((mino) => mino.blocks.includes(block))))
 
-      // new minos resulting from splitting
-      const newMinos = minos.flatMap((mino) => mino.split(row))
+    const blocks = rows.flatMap((r) => r); // Array flatten?
 
-      // remove the old minos
-      minos.forEach((mino) => arrayRemove(this.minos, mino));
+    // unique minos intersecting these blocks
+    const minos = arrayUniq(blocks.map((block) => this.minos.find((mino) => mino.blocks.includes(block))))
 
-      // replace with new ones
-      this.minos = this.minos.concat(newMinos)
-    })
+    // new minos resulting from splitting
+    const newMinos = minos.flatMap((mino) => mino.split(blocks))
 
+    // remove the old minos
+    minos.forEach((mino) => arrayRemove(this.minos, mino));
+
+    // replace with new ones
+    this.minos = this.minos.concat(newMinos)
+
+    // Rebuilt the grid of blocks
     this.updateCells()
   }
 
+  // !! consider just returning indecies of the rows
+  // (or new Row entity)
   filledRows () {
     return this.grid.filter((row) => this.isRowFilled(row))
   }
