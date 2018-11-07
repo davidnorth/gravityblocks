@@ -139,9 +139,18 @@ class Board {
   }
 
   updateInteractive () {
-    if(this.stateFrame % 10 === 0) {
-      console.log("move mino");
-      this.newMino.moveDown(true)
+    if(this.canFall(this.newMino)) {
+      if (Key.isDown(Key.LEFT)) this.newMino.moveLeft();
+      if (Key.isDown(Key.RIGHT)) this.newMino.moveRight();
+      if(this.stateFrame % 20 === 0) {
+        this.newMino.moveDown(true)
+      }
+    } else {
+      this.minos.push(this.newMino);
+      this.updateCells();
+      this.newMino = null;
+      this.popMino();
+      this.startLineClearing()
     }
   }
 

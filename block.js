@@ -18,6 +18,14 @@ class Block {
     this.entity.ty = this.y;
   }
 
+  moveLeft () {
+    this.x = this.entity.x = this.x - 1;
+  }
+
+  moveRight () {
+    this.x = this.entity.x = this.x + 1;
+  }
+
 }
 
 class BlockEntity {

@@ -22,6 +22,14 @@ class Mino {
     });
   }
 
+  moveLeft () {
+    this.blocks.forEach((b) => b.moveLeft());
+  }
+
+  moveRight () {
+    this.blocks.forEach((b) => b.moveRight());
+  }
+
   cellsBelow () {
     return this.blocks
       // all cells below a block's position
