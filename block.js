@@ -13,6 +13,11 @@ class Block {
       (this.x === other.x && Math.abs(this.y - other.y) === 1)
   }
 
+  moveDown() {
+    this.y ++;
+    this.entity.ty = this.y;
+  }
+
 }
 
 class BlockEntity {
@@ -21,7 +26,7 @@ class BlockEntity {
     this.y = block.y
     this.ty = block.y;
     this.vy = 0;
-    this.g = 0.01;
+    this.g = 0.02;
   }
 
   update () {

@@ -9,8 +9,11 @@ function arrayRemove(array, value) {
 }
 
 
+// player controlling falling mino
 const BOARD_STATE_INTERACTIVE = 'Interactive'
+// line clear animation
 const BOARD_STATE_CLEARING = 'Clearing'
+// settle animation - falling block entities
 const BOARD_STATE_SETTLING = 'Settling'
 
 
@@ -21,13 +24,33 @@ class Board {
     this.grid = []
     this.blocks = []
     this.updateCells()
-    this.setState(BOARD_STATE_SETTLING)
+    this.setState(BOARD_STATE_INTERACTIVE)
   }
 
   setState(state) {
     this.state = state
     this.stateFrame = 0
   }
+
+
+  // Update minos to the lowest position they can fall to instantly
+  // and start updating their entities for settle animation
+  drop () {
+    let updatedCount = 1
+    while(updatedCount > 0) {
+      updatedCount = 0;
+      this.minos.forEach((mino) => {
+        if(this.canFall(mino)) {
+          updatedCount ++;
+          mino.moveDown();
+          board.updateCells();
+        }
+      })
+    }
+    this.setState(BOARD_STATE_SETTLING)
+  }
+
+
 
   update () {
     this.stateFrame ++;

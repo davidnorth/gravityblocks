@@ -7,7 +7,7 @@ class Mino {
 
   moveDown () {
     this.blocks.forEach((block) => {
-      block.y++;
+      block.moveDown();
     });
   }
 

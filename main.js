@@ -20,6 +20,21 @@ const L_TRIMINO = 3
 const minos = [
 
   new Mino([
+    new Block(0, 0, I_TRIMINO),
+    new Block(1, 0, I_TRIMINO),
+    new Block(2, 0, I_TRIMINO)
+  ]),
+
+  new Mino([
+    new Block(8, 0, L_TRIMINO),
+    new Block(8, 1, L_TRIMINO),
+    new Block(9, 1, L_TRIMINO)
+  ]),
+
+
+
+
+  new Mino([
     new Block(5, 5, I_TRIMINO),
     new Block(5, 6, I_TRIMINO),
     new Block(5, 7, I_TRIMINO)
@@ -33,9 +48,9 @@ const minos = [
 
 
   new Mino([
-    new Block(0, 0, I_TRIMINO),
-    new Block(0, 1, I_TRIMINO),
-    new Block(0, 2, I_TRIMINO)
+    new Block(0, 2, I_TRIMINO),
+    new Block(0, 3, I_TRIMINO),
+    new Block(0, 4, I_TRIMINO)
   ]),
 
   new Mino([
@@ -82,18 +97,25 @@ const minos = [
     new Block(8, 12, L_TRIMINO)
   ]),
 
+  new Mino([
+    new Block(6, 0, L_TRIMINO),
+    new Block(6, 1, L_TRIMINO),
+    new Block(7, 0, L_TRIMINO)
+  ]),
 
   new Mino([
-    new Block(6, 1, L_TRIMINO),
-    new Block(6, 2, L_TRIMINO),
-    new Block(7, 1, L_TRIMINO)
+    new Block(6, 3, L_TRIMINO),
+    new Block(6, 4, L_TRIMINO),
+    new Block(7, 3, L_TRIMINO)
   ]),
 ]
 
 const board = new Board(minos);
 
 
-document.getElementById('testButton')
+document.getElementById('testButton1')
+  .addEventListener('click', board.drop.bind(board))
+document.getElementById('testButton2')
   .addEventListener('click', board.clearLines.bind(board))
 
 
@@ -108,13 +130,6 @@ spriteMap[L_TRIMINO] = [1, 2]
 
 function update() {
   board.update()
-
-  // board.minos.forEach((mino) => {
-  //   if(board.canFall(mino)) {
-  //       mino.moveDown()
-  //       board.updateCells()
-  //   }
-  // })
 
 }
 
