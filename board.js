@@ -190,7 +190,7 @@ class Board {
 
 
 
-      if(this.stateFrame % 20 === 0) {
+      if(this.stateFrame % 5 === 0) {
         this.newMino.moveDown(true)
       }
 

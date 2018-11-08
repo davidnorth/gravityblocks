@@ -1,16 +1,74 @@
+
+// Lookup for piece shape and rotation
+
+// .X.
+// .X.
+// .X.
+
+// ...
+// XXX
+// ...
+
+// .X..
+// .XX.
+// ...
+
+// ...
+// .XX.
+// .x.
+
+// ...
+// XX.
+// .X.
+
+// .X..
+// XX.
+// ...
+
+
+// values are arrays of rotated shapes
+// each of these is an array of block x/y pairs
+const SHAPE_TABLE = {
+  1: [
+    [[1,0], [1,1], [1,2]],
+    [[0,1], [1,1], [2,1]]
+  ],
+  2: [
+    [[1,0],[1,1],[2,1]],
+    [[1,1],[2,1],[2,2]],
+    [[0,1],[1,1],[2,1]],
+    [[1,0],[0,1],[1,1]]
+  ]
+}
+
 class Mino {
 
-  constructor (blocks) {
-    this.blocks = blocks;
+
+  constructor (shape, x, y) {
+    this.rotation = 0;
+    if(shape.map) {
+      this.blocks = shape
+    } else {
+      this.blocks = this.blocksFromShape(shape, x, y);
+    }
     this.landed = false;
   }
 
+  blocksFromShape (shape, x, y) {
+    const rotation = SHAPE_TABLE[shape][this.rotation]
+    console.log(rotation);
+    return rotation.map((pair) => new Block(pair[0] + x, pair[1] + y, shape)
+    )
+  }
+
+  rotateCW () {
+  }
+
+  rotateCCW () {
+  }
+
   static getRandom () {
-    return new Mino([
-      new Block(4, 0, L_TRIMINO),
-      new Block(4, 1, L_TRIMINO),
-      new Block(5, 0, L_TRIMINO)
-    ])
+    return new Mino(I_TRIMINO, 5, 0)
   }
 
   moveDown (instant) {
