@@ -8,6 +8,10 @@ function arrayRemove(array, value) {
   return array;
 }
 
+function now() {
+  return (new Date()).getTime()
+}
+
 
 // countdown to start of gameplay
 const BOARD_STATE_COUNTDOWN = 'Countdown'
@@ -119,6 +123,16 @@ class Board {
     return !mino.onBottom() && !this.touchingMinoBelow(mino)
   }
 
+  canMoveLeft (mino) {
+    //!! add collision check
+    return mino.blocks.every((b) => b.x > 0);
+  }
+
+  canMoveRight (mino) {
+    //!! add collision check
+    return mino.blocks.every((b) => b.x < BOARD_WIDTH - 1);
+  }
+
   touchingMinoBelow (mino) {
     return mino.cellsBelow().some((cell) => !! this.getCell(cell[0], cell[1]))
   }
@@ -140,11 +154,46 @@ class Board {
 
   updateInteractive () {
     if(this.canFall(this.newMino)) {
-      if (Key.isDown(Key.LEFT)) this.newMino.moveLeft();
-      if (Key.isDown(Key.RIGHT)) this.newMino.moveRight();
+
+      if (!Key.isDown(Key.LEFT)) {
+        this.holdLeftSince = null
+      }
+      if (!Key.isDown(Key.RIGHT)) {
+        this.holdRightSince = null
+      }
+
+      if (Key.isDown(Key.LEFT) && !this.holdRightSince) {
+        if(this.canMoveLeft(this.newMino)) {
+          if(this.holdLeftSince) {
+            if(now() - this.holdLeftSince > 300) {
+              this.newMino.moveLeft();
+            }
+          } else {
+            this.holdLeftSince = now()
+            this.newMino.moveLeft();
+          }
+        }
+      }
+
+      if (Key.isDown(Key.RIGHT) && !this.holdLeftSince) {
+        if(this.canMoveRight(this.newMino)) {
+          if(this.holdRightSince) {
+            if(now() - this.holdRightSince > 300) {
+              this.newMino.moveRight();
+            }
+          } else {
+            this.holdRightSince = now()
+            this.newMino.moveRight();
+          }
+        }
+      }
+
+
+
       if(this.stateFrame % 20 === 0) {
         this.newMino.moveDown(true)
       }
+
     } else {
       this.minos.push(this.newMino);
       this.updateCells();
