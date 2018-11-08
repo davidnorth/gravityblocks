@@ -188,9 +188,12 @@ class Board {
         }
       }
 
+      if (Key.isDown(Key.UP)) {
+        this.newMino.rotateCW();
+      }
 
 
-      if(this.stateFrame % 5 === 0) {
+      if(this.stateFrame % 20 === 0) {
         this.newMino.moveDown(true)
       }
 

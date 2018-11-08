@@ -1,31 +1,6 @@
 
 // Lookup for piece shape and rotation
 
-// .X.
-// .X.
-// .X.
-
-// ...
-// XXX
-// ...
-
-// .X..
-// .XX.
-// ...
-
-// ...
-// .XX.
-// .x.
-
-// ...
-// XX.
-// .X.
-
-// .X..
-// XX.
-// ...
-
-
 // values are arrays of rotated shapes
 // each of these is an array of block x/y pairs
 const SHAPE_TABLE = {
@@ -46,32 +21,48 @@ class Mino {
 
   constructor (shape, x, y) {
     this.rotation = 0;
+    // is first arg an array (presumably of blocks)
     if(shape.map) {
       this.blocks = shape
     } else {
-      this.blocks = this.blocksFromShape(shape, x, y);
+      // or its a shape identifier
+      // we need to store an origin position
+      this.x = x
+      this.y = y
+      this.shape = shape;
+      this.rebuildBlocks()
     }
     this.landed = false;
   }
 
   blocksFromShape (shape, x, y) {
+    console.log(y);
     const rotation = SHAPE_TABLE[shape][this.rotation]
-    console.log(rotation);
-    return rotation.map((pair) => new Block(pair[0] + x, pair[1] + y, shape)
-    )
+    return rotation.map((pair) => new Block(pair[0] + x, pair[1] + y, shape))
+  }
+
+  rebuildBlocks () {
+    this.blocks = this.blocksFromShape(this.shape, this.x, this.y)
   }
 
   rotateCW () {
+    this.rotation = this.rotation + 1 === SHAPE_TABLE[this.shape].length ? 0 : this.rotation + 1;
+    this.rebuildBlocks()
   }
 
-  rotateCCW () {
-  }
+  // rotateCCW () {
+  //   this.rotation = (this.rotation === 0) ? SHAPE_TABLE[this.shape].length - 1 ? 0
+  //   this.blocks = this.blocksFromShape(this.shape);
+  // }
 
   static getRandom () {
-    return new Mino(I_TRIMINO, 5, 0)
+    return new Mino(I_TRIMINO, 5, 3)
   }
 
   moveDown (instant) {
+    if(this.y) {
+      this.y ++;
+    }
     this.blocks.forEach((block) => {
       block.moveDown();
       if(instant) {
@@ -81,10 +72,12 @@ class Mino {
   }
 
   moveLeft () {
+    if(this.x) this.x--;
     this.blocks.forEach((b) => b.moveLeft());
   }
 
   moveRight () {
+    if(this.x) this.x++;
     this.blocks.forEach((b) => b.moveRight());
   }
 
