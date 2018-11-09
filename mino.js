@@ -10,9 +10,9 @@ const SHAPE_TABLE = {
   ],
   2: [
     [[1,0],[1,1],[2,1]],
+    [[2,1],[1,1],[1,2]],
     [[1,1],[2,1],[2,2]],
-    [[0,1],[1,1],[2,1]],
-    [[1,0],[0,1],[1,1]]
+    [[0,1],[1,1],[1,0]],
   ]
 }
 
@@ -21,14 +21,14 @@ class Mino {
 
   constructor (shape, x, y) {
     this.rotation = 0;
+    this.x = x
+    this.y = y
     // is first arg an array (presumably of blocks)
     if(shape.map) {
       this.blocks = shape
     } else {
       // or its a shape identifier
       // we need to store an origin position
-      this.x = x
-      this.y = y
       this.shape = shape;
       this.rebuildBlocks()
     }
@@ -36,7 +36,6 @@ class Mino {
   }
 
   blocksFromShape (shape, x, y) {
-    console.log(y);
     const rotation = SHAPE_TABLE[shape][this.rotation]
     return rotation.map((pair) => new Block(pair[0] + x, pair[1] + y, shape))
   }
@@ -46,6 +45,8 @@ class Mino {
   }
 
   rotateCW () {
+    console.log(this.y);
+
     this.rotation = this.rotation + 1 === SHAPE_TABLE[this.shape].length ? 0 : this.rotation + 1;
     this.rebuildBlocks()
   }
@@ -56,12 +57,14 @@ class Mino {
   // }
 
   static getRandom () {
-    return new Mino(I_TRIMINO, 5, 3)
+    const i = Math.floor(Math.random() * 2) + 1;
+    return new Mino(i, 3, 0)
   }
 
   moveDown (instant) {
-    if(this.y) {
+    if(this.y !== undefined) {
       this.y ++;
+      console.log(this.y);
     }
     this.blocks.forEach((block) => {
       block.moveDown();

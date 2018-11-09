@@ -16,10 +16,7 @@ const I_TRIMINO = 1
 const L_TRIMINO = 2
 
 
-const minos = [
-  new Mino(I_TRIMINO, 0, 0)
-]
-
+const minos = []
 const board = new Board(minos);
 
 

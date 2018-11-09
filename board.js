@@ -27,14 +27,21 @@ class Board {
 
   constructor (minos) {
     this.minos = minos;
-    this.grid = []
-    this.blocks = []
-    this.updateCells()
-    this.rowsToClear = []
-    this.queue = []
-    this.initQueue()
-    this.newMino = null
-    this.setState(BOARD_STATE_COUNTDOWN)
+    this.grid = [];
+    this.blocks = [];
+    this.updateCells();
+    this.rowsToClear = [];
+    this.queue = [];
+    this.initQueue();
+    this.newMino = null;
+    this.startInteractive();
+
+    // !!! move me
+    window.addEventListener('keypress', (e) => {
+      if(e.keyCode === 32) {
+        this.hardDrop();
+      }
+    })
   }
 
   initQueue() {
@@ -119,6 +126,15 @@ class Board {
     }
   }
 
+  hardDrop () {
+    console.log("hardDrop");
+    while(this.canFall(this.newMino)) {
+      console.log("moving down");
+      this.newMino.moveDown(true);
+      this.updateCells()
+    }
+  }
+
   canFall (mino) {
     return !mino.onBottom() && !this.touchingMinoBelow(mino)
   }
@@ -143,10 +159,8 @@ class Board {
 
 
   startInteractive () {
-    console.log("startInteractive");
     this.newMino = this.popMino();
     this.setState(BOARD_STATE_INTERACTIVE)
-    console.log(this.newMino);
   }
 
   updateCountdown () {
@@ -188,9 +202,15 @@ class Board {
         }
       }
 
-      if (Key.isDown(Key.UP)) {
+      if (Key.isDown(Key.UP) && !this.turnKeyDown) {
         this.newMino.rotateCW();
+        this.turnKeyDown = true
       }
+      if (!Key.isDown(Key.UP)) {
+        this.turnKeyDown = false
+      }
+
+
 
 
       if(this.stateFrame % 20 === 0) {
