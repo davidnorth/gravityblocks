@@ -45,8 +45,6 @@ class Mino {
   }
 
   rotateCW () {
-    console.log(this.y);
-
     this.rotation = this.rotation + 1 === SHAPE_TABLE[this.shape].length ? 0 : this.rotation + 1;
     this.rebuildBlocks()
   }
@@ -64,7 +62,6 @@ class Mino {
   moveDown (instant) {
     if(this.y !== undefined) {
       this.y ++;
-      console.log(this.y);
     }
     this.blocks.forEach((block) => {
       block.moveDown();

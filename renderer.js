@@ -1,3 +1,6 @@
+const BOARD_OFFSET_X = 16
+const BOARD_OFFSET_Y = 16
+
 class Renderer {
 
   constructor (options) {
@@ -5,11 +8,47 @@ class Renderer {
     this.ctx = canvas.getContext('2d');
     this.sprites = options.sprites;
     this.state = options.state;
+    this.onReady = options.onReady;
+    this.prepare();
   }
 
-  spr (spriteX, spriteY, x, y) {
+
+  prepare () {
+
+    this.bgCanvas = document.createElement('canvas')
+    this.bgCanvas.width = 192
+    this.bgCanvas.height = 192
+    this.bgCtx = this.bgCanvas.getContext('2d');
+    this.drawBg();
+
+    this.bgImage = this.bgCtx.getImageData(0, 0, 192, 192)
+
+    this.onReady(this)
+  }
+
+  drawBg () {
+    this.bgCtx.fillStyle = '#eee';
+    this.bgCtx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+
+    for(let y = 0; y < CANVAS_HEIGHT / SPRITE_SIZE; y++) {
+      for(let x = 0; x < CANVAS_WIDTH / SPRITE_SIZE; x++) {
+        this.spr(this.bgCtx, 10, 0, x * SPRITE_SIZE, y * SPRITE_SIZE)
+      }
+    }
+
+    for(let y = 0; y < BOARD_HEIGHT; y++) {
+      for(let x = 0; x < BOARD_WIDTH; x++) {
+        this.spr(this.bgCtx, 4, 0, x * SPRITE_SIZE + BOARD_OFFSET_X, y * SPRITE_SIZE + BOARD_OFFSET_Y)
+      }
+    }
+  }
+
+
+
+  spr (ctx, spriteX, spriteY, x, y) {
     const spriteImage = this.sprites.getSpriteImageData(spriteX, spriteY);
-    this.ctx.putImageData(spriteImage, x, y);
+    ctx.putImageData(spriteImage, x, y);
   }
 
 
@@ -17,19 +56,8 @@ class Renderer {
 
 
   render () {
-    this.drawBg();
+    this.ctx.putImageData(this.bgImage, 0, 0);
     this.drawMinos();
-  }
-
-  drawBg () {
-    this.ctx.fillStyle = '#eee';
-    this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    for(let y = 0; y < BOARD_HEIGHT; y++) {
-      for(let x = 0; x < BOARD_WIDTH; x++) {
-        this.spr(4, 0, x * SPRITE_SIZE, y * SPRITE_SIZE)
-      }
-    }
   }
 
   drawMino (mino) {
@@ -43,9 +71,9 @@ class Renderer {
           sX = spriteMap[block.col][0]
           sY = spriteMap[block.col][1]
         }
-        this.spr(
+        this.spr(this.ctx,
                      sX ,sY,
-                     block.entity.x * SPRITE_SIZE, block.entity.y * SPRITE_SIZE);
+                     block.entity.x * SPRITE_SIZE + BOARD_OFFSET_X, block.entity.y * SPRITE_SIZE + BOARD_OFFSET_Y);
       });
   }
 

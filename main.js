@@ -1,7 +1,7 @@
 
 // Render settings
-const CANVAS_WIDTH = 640;
-const CANVAS_HEIGHT = 480;
+const CANVAS_WIDTH = 192
+const CANVAS_HEIGHT = 192
 const BUFFER_WIDTH = 160;
 const BUFFER_HEIGHT = 120;
 const SPRITE_SIZE = 8;
@@ -46,12 +46,12 @@ const sprites = new SpriteSheet('sprites.png', SPRITE_SIZE, () => {
   const renderer = new Renderer({
     canvasId: 'canvas',
     sprites,
-    state
+    state,
+    onReady: (renderer) => {
+      const game = new Game(state, update, renderer.render.bind(renderer));
+      game.start();
+    }
   });
-
-  const game = new Game(state, update, renderer.render.bind(renderer));
-
-  game.start();
 
 })
 
